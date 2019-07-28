@@ -1,9 +1,6 @@
 package jdbc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Main {
 
@@ -25,6 +22,16 @@ public class Main {
             statement.executeUpdate("INSERT INTO users (name, information) VALUES ('user 1', 'new user')");
             statement.executeUpdate("INSERT INTO users SET name='user 2', information='lorem ipsum'");
 
+            String userId = "1";
+
+//            java injection
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE user_id=?");
+            preparedStatement.setString(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("user name: " + resultSet.getString("name"));
+                System.out.println("user information: " + resultSet.getString("information"));
+            }
 
         }
 
