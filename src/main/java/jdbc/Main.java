@@ -50,6 +50,15 @@ public class Main {
             statement1.setBlob(2, blob);
             statement1.execute();
 
+//            Save file from MySQL
+            ResultSet resultSet1 = statement.executeQuery("SELECT * FROM users;");
+            while (resultSet1.next()) {
+                Blob blob1 = resultSet1.getBlob("image");
+                BufferedImage image1 = ImageIO.read(blob.getBinaryStream());
+                File outputFile = new File("new_icon.png");
+                ImageIO.write(image1, "png", outputFile);
+            }
+
         }
 
     }
