@@ -22,7 +22,7 @@ public class Main {
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS users(user_id INT NOT NULL AUTO_INCREMENT," +
-                    "name VARCHAR(30), information VARCHAR(30), image BLOB, PRIMARY KEY (user_id))");
+                    "name VARCHAR(30), information VARCHAR(30), image BLOB, dataDay DATE, PRIMARY KEY (user_id))");
 
             statement.executeUpdate("INSERT INTO users (name, information) VALUES ('user 1', 'new user')");
             statement.executeUpdate("INSERT INTO users SET name='user 2', information='lorem ipsum'");
@@ -57,6 +57,21 @@ public class Main {
                 BufferedImage image1 = ImageIO.read(blob.getBinaryStream());
                 File outputFile = new File("new_icon.png");
                 ImageIO.write(image1, "png", outputFile);
+            }
+
+//            Add data column to mySQL
+            PreparedStatement preparedStatement1 = connection.prepareStatement("INSERT INTO users (name, dataDay) " +
+                    "VALUES ('user 1', ?) ");
+            preparedStatement1.setDate(1, new Date(1564589614326L));
+            preparedStatement1.execute();
+//          we can print in console MySQL request:
+            System.out.println(preparedStatement1);
+//            another way to add some record in MySQL:
+            statement1.executeUpdate("INSERT INTO users (name, dataDay) VALUES ('New user', {d'2019-07-31'}) ");
+//            Get date from MySQL:
+            ResultSet resultSet2 = statement1.executeQuery("SELECT * FROM users");
+            while (resultSet2.next()) {
+                System.out.println(resultSet2.getDate("dataDay"));
             }
 
         }
