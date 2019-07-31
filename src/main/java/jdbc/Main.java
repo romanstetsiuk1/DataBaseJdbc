@@ -1,5 +1,7 @@
 package jdbc;
 
+import com.sun.deploy.security.ValidationState;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -72,6 +74,23 @@ public class Main {
             ResultSet resultSet2 = statement1.executeQuery("SELECT * FROM users");
             while (resultSet2.next()) {
                 System.out.println(resultSet2.getDate("dataDay"));
+            }
+
+//            Create PROCEDUREs in MySQL
+            CallableStatement callableStatement = connection.prepareCall("{call UsersCount(?)}");
+            callableStatement.registerOutParameter(1, Types.INTEGER);
+            callableStatement.execute();
+            System.out.println(callableStatement.getInt(1));
+            System.out.println("-------------------------------------------");
+
+            CallableStatement callableStatement1 = connection.prepareCall("{call getUser(?)}");
+            callableStatement1.setInt(1, 1);
+            if (callableStatement1.execute()) {
+                ResultSet resultSet3 = callableStatement1.getResultSet();
+                while (resultSet3.next()) {
+                    System.out.println(resultSet3.getInt("user_id"));
+                    System.out.println(resultSet3.getString("name"));
+                }
             }
 
         }
